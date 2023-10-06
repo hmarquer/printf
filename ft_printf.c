@@ -15,7 +15,7 @@ t_print *ft_initialise_tab(t_print *tab)
 	return (tab);
 }
 
-int	ft_printf(const char *format, ...)
+int	ft_printf(const char *str, ...)
 {
 	int		i;
 	int		ret;
@@ -28,12 +28,12 @@ int	ft_printf(const char *format, ...)
 		va_start(tab->args, format);
 	i = -1;
 	ret = 0;
-	while (format[++i])
+	while (str[++i])
 	{
-		if (format[i] == '%')
-			i = ft_eval_format(tab, format, i + 1);
+		if (str[i] == '%')
+			i = ft_eval_format(tab, str, i + 1);
 		else
-			ret += write(1, &format[i], 1);
+			ret += write(1, &str[i], 1);
 	}
 	va_end(tab->args);
 	ret += tab->tl;
