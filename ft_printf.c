@@ -1,42 +1,56 @@
-#include "printf.h"
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   ft_printf.c                                        :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: hmarquer <marvin@42.fr>                    +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2023/10/07 23:03:37 by hmarquer          #+#    #+#             */
+/*   Updated: 2023/10/07 23:03:41 by hmarquer         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
 
-t_print *ft_initialise_tab(t_print *tab)
+#include "ft_printf.h"
+
+static void	ft_format(va_list va, char *str, int *c)
 {
-	tab->wdt = 0;
-	tab->prc = 0;
-	tab->zero = 0;
-	tab->pnt = 0;
-	tab->sign = 0;
-	tab->tl = 0;
-	tab->is_zero = 0;
-	tab->dash = 0;
-	tab->perc = 0;
-	tab->sp = 0;
-	return (tab);
+	if (*str == 'i' || *str == 'd')
+		ft_writenbr(va_arg(va, int), c);
+	else if (*str == 'c')
+		*c += ft_writechar(va_arg(va, int));
+	else if (*str == 's')
+		*c += ft_writestr(va_arg(va, char *));
+	else if (*str == 'p')
+		ft_writeptr(va_arg(va, void *), c);
+	else if (*str == 'u')
+		ft_writeuint(va_arg(va, unsigned int), c);
+	else if (*str == 'x')
+		ft_writehex(va_arg(va, unsigned int), c, 'a');
+	else if (*str == 'X')
+		ft_writehex(va_arg(va, unsigned int), c, 'A');
+	else if (*str == '%')
+		*c += ft_writechar(*str);
 }
 
 int	ft_printf(const char *str, ...)
 {
-	int		i;
+	va_list	va;
 	int		ret;
-	t_print	*tab;
 
-	tab = (t_print *)malloc(sizeof(t_print));
-	if (!tab)
-		return (-1);
-	ft_initialise_tab(tab)
-		va_start(tab->args, format);
-	i = -1;
+	va_start(va, str);
 	ret = 0;
-	while (str[++i])
+	while (*str)
 	{
-		if (str[i] == '%')
-			i = ft_eval_format(tab, str, i + 1);
+		if (*str == '%')
+			ft_format(va, (char *)(++str), &ret);
 		else
-			ret += write(1, &str[i], 1);
+		{
+			ret += ft_writechar(*str);
+		}
+		if (ret == -1)
+			return (-1);
+		str++;
 	}
-	va_end(tab->args);
-	ret += tab->tl;
-	free(tab);
+	va_end(va);
 	return (ret);
 }

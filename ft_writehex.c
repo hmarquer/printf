@@ -1,28 +1,27 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_printf.h                                        :+:      :+:    :+:   */
+/*   ft_writehex.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: hmarquer <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2023/10/07 23:03:49 by hmarquer          #+#    #+#             */
-/*   Updated: 2023/10/07 23:03:53 by hmarquer         ###   ########.fr       */
+/*   Created: 2023/10/07 23:04:08 by hmarquer          #+#    #+#             */
+/*   Updated: 2023/10/07 23:04:12 by hmarquer         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#ifndef FT_PRINTF_H
-# define FT_PRINTF_H
-# include <stdarg.h>
-# include <stdlib.h>
-# include <stdio.h>
-# include <unistd.h>
+#include "ft_printf.h"
 
-int		ft_writechar(char c);
-int		ft_writestr(char *s);
-void	ft_writenbr(int n, int *count);
-void	ft_writeuint(unsigned int n, int *count);
-void	ft_writeptr(void *ptr, int *count);
-void	ft_writehex(unsigned long n, int *count, char a);
-int		ft_printf(const char *format, ...);
+void	ft_writehex(unsigned long n, int *count, char a)
+{
+	char	c;
+	int		d;
 
-#endif
+	if (n / 16)
+		ft_writehex(n / 16, count, a);
+	d = n % 16;
+	if (d < 10)
+		*count += ft_writechar('0' + d);
+	else
+		*count += ft_writechar(a + d - 10);
+}

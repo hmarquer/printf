@@ -1,5 +1,5 @@
 NAME = libftprintf.a
-SRC = 
+SRC = ft_printf.c ft_writechar.c ft_writestr.c ft_writenbr.c ft_writeptr.c ft_writeuint.c ft_writehex.c
 
 
 RM = rm -f
